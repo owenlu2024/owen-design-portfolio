@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Owen Work | Product Design Portfolio</title>
+    <meta
+      name="description"
+      content="Owen's product design portfolio, presenting seven outdoor living projects through a curated image mosaic."
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="logo" href="#top" aria-label="Back to top">Owen’s Design Portfolio</a>
+    </header>
+
+    <main id="top" class="page">
+      <header class="page-header">
+        <div>
+          <h1>
+            <span>Quiet Objects</span>
+            <span>For Outdoor</span>
+            <span>Living.</span>
+          </h1>
+        </div>
+        <p>
+          Seven product design projects presented as a clean white-background image mosaic. Select any image to view the full gallery and design notes.
+        </p>
+      </header>
+
+      <section class="product-index" aria-label="Seven product projects">
+        <div class="index-grid" id="productIndex"></div>
+      </section>
+
+      <section class="gallery-section" aria-label="Project image mosaic">
+        <div class="gallery-heading">
+          <p class="kicker">Waterfall Gallery</p>
+          <h2>All Product Images</h2>
+        </div>
+        <div class="masonry" id="projectGrid"></div>
+      </section>
+    </main>
+
+    <dialog class="project-dialog" id="projectDialog" aria-label="Project detail">
+      <div class="dialog-shell">
+        <div class="detail-progress" aria-hidden="true"><span id="detailProgress"></span></div>
+        <button class="close" type="button" data-close aria-label="Close">×</button>
+        <div class="dialog-copy">
+          <p class="kicker" id="dialogType"></p>
+          <h2 id="dialogTitle"></h2>
+          <p id="dialogDesc"></p>
+          <dl class="spec-list" id="dialogSpecs"></dl>
+        </div>
+        <div class="dialog-gallery" id="dialogGallery"></div>
+      </div>
+    </dialog>
+
+    <dialog class="lightbox" id="lightbox" aria-label="Image preview">
+      <button class="lightbox-close" type="button" data-lightbox-close aria-label="Close preview">
+        &times;
+      </button>
+      <button class="lightbox-nav lightbox-prev" type="button" data-lightbox-prev aria-label="Previous image">
+        ‹
+      </button>
+      <div class="lightbox-stage" id="lightboxStage"></div>
+      <button class="lightbox-nav lightbox-next" type="button" data-lightbox-next aria-label="Next image">
+        ›
+      </button>
+    </dialog>
+
+    <script src="app.js"></script>
+  </body>
+</html>
