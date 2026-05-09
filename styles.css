@@ -678,6 +678,35 @@ img {
   height: auto;
   object-fit: contain;
   background: #fff;
+  animation: lightboxImageIn 0.34s cubic-bezier(0.22, 1, 0.36, 1) both;
+  will-change: opacity, transform;
+}
+
+.lightbox-stage img[data-direction="next"],
+.lightbox-stage video[data-direction="next"] {
+  --lightbox-enter-x: 28px;
+}
+
+.lightbox-stage img[data-direction="previous"],
+.lightbox-stage video[data-direction="previous"] {
+  --lightbox-enter-x: -28px;
+}
+
+.lightbox-stage img[data-direction="current"],
+.lightbox-stage video[data-direction="current"] {
+  --lightbox-enter-x: 0px;
+}
+
+@keyframes lightboxImageIn {
+  from {
+    opacity: 0;
+    transform: translateX(var(--lightbox-enter-x, 0px)) scale(0.985);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
 }
 
 .lightbox-close,

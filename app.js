@@ -547,7 +547,7 @@ function clearProjectFocus() {
   });
 }
 
-function renderLightbox() {
+function renderLightbox(direction = 0) {
   lightboxStage.innerHTML = "";
   const src = activeProjectMedia[activeLightboxIndex];
 
@@ -560,6 +560,8 @@ function renderLightbox() {
     variant: "large",
   });
   element.classList.add("media-loaded");
+  element.dataset.direction =
+    direction < 0 ? "previous" : direction > 0 ? "next" : "current";
   lightboxStage.append(element);
 }
 
@@ -584,7 +586,7 @@ function moveLightbox(direction) {
   activeLightboxIndex =
     (activeLightboxIndex + direction + activeProjectMedia.length) %
     activeProjectMedia.length;
-  renderLightbox();
+  renderLightbox(direction);
 }
 
 function renderProjects(filter = "all") {
