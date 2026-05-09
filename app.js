@@ -214,7 +214,7 @@ const projects = [
 
 const projectAssets = {
   "Waterproof Retro Bug Zapper": {
-    folder: "防水复古灭蚊灯",
+    folder: "assets/waterproof-retro",
     cover: "001.jpg",
     images: [
       "001.jpg",
@@ -236,10 +236,10 @@ const projectAssets = {
     ],
   },
   "Portable Outdoor Mosquito Lamp A": {
-    folder: "户外手持驱蚊灯A",
-    cover: "户外桌子2.557.jpg",
+    folder: "assets/portable-lamp-a",
+    cover: "outdoor-table-2.557.jpg",
     images: [
-      "户外桌子2.557.jpg",
+      "outdoor-table-2.557.jpg",
       "05.553.jpg",
       "1213.555.jpg",
       "Plane.bip.563.jpg",
@@ -256,7 +256,7 @@ const projectAssets = {
     ],
   },
   "Outdoor Handheld Mosquito Lamp 2": {
-    folder: "户外手持驱蚊灯2",
+    folder: "assets/handheld-lamp-2",
     cover: "untitled.278.jpg",
     images: [
       "untitled.278.jpg",
@@ -273,7 +273,7 @@ const projectAssets = {
     ],
   },
   "Outdoor Candle Mosquito Lamp A": {
-    folder: "户外蜡烛驱蚊灯A",
+    folder: "assets/candle-lamp-a",
     cover: "0098.175.jpg",
     images: [
       "0098.175.jpg",
@@ -299,8 +299,8 @@ const projectAssets = {
       "0098.227.jpg",
       "0098.226.jpg",
       "0098.223.jpg",
-      "未标题-2.jpg",
-      "未标题-3.jpg",
+      "untitled-2.jpg",
+      "untitled-3.jpg",
     ],
     videos: [
       "0098.233.mp4",
@@ -311,10 +311,10 @@ const projectAssets = {
     ],
   },
   "Outdoor Candle Mosquito Lamp B": {
-    folder: "户外蜡烛驱蚊灯B",
-    cover: "未标题-1.jpg",
+    folder: "assets/candle-lamp-b",
+    cover: "untitled-1.jpg",
     images: [
-      "未标题-1.jpg",
+      "untitled-1.jpg",
       "0098.225.jpg",
       "0098.222.jpg",
       "0098.177.jpg",
@@ -338,7 +338,7 @@ const projectAssets = {
     ],
   },
   "Flame Mist Device": {
-    folder: "火焰喷雾",
+    folder: "assets/flame-mist",
     cover: "001-cj.3406.jpg",
     images: [
       "001-cj.3406.jpg",
@@ -353,9 +353,9 @@ const projectAssets = {
     ],
   },
   "Wall-Mounted Bug Zapper": {
-    folder: "壁挂灭蚊灯",
-    cover: "未标题-2.jpg",
-    images: ["未标题-2.jpg", "001.2662.jpg", "001.2667.jpg"],
+    folder: "assets/wall-mounted",
+    cover: "untitled-2.jpg",
+    images: ["untitled-2.jpg", "001.2662.jpg", "001.2667.jpg"],
   },
 };
 
@@ -387,21 +387,45 @@ const lightboxNext = document.querySelector("[data-lightbox-next]");
 let activeProjectMedia = [];
 let activeLightboxIndex = 0;
 
-function makeImage(src, alt, loading = "lazy") {
+function getOptimizedImageSrc(src, variant = "preview") {
+  if (!/\.(jpe?g)$/i.test(src) || !src.startsWith("assets/")) {
+    return src;
+  }
+
+  return src.replace(/^assets\//, `assets/optimized/${variant}/`);
+}
+
+function makeImage(src, alt, options = {}) {
+  const { loading = "lazy", variant = "preview" } = options;
   const image = document.createElement("img");
-  image.src = src;
+  image.src = getOptimizedImageSrc(src, variant);
   image.alt = alt;
   image.loading = loading;
+  image.decoding = "async";
+
+  if (loading === "eager") {
+    image.fetchPriority = "high";
+  }
+
   image.addEventListener("load", () => image.classList.add("media-loaded"), {
     once: true,
   });
-  image.addEventListener("error", () => image.classList.add("media-loaded"), {
-    once: true,
-  });
+  image.addEventListener(
+    "error",
+    () => {
+      if (image.src !== src) {
+        image.src = src;
+        return;
+      }
+
+      image.classList.add("media-loaded");
+    },
+    { once: true },
+  );
   return image;
 }
 
-function makeMedia(src, alt) {
+function makeMedia(src, alt, options = {}) {
   if (src.endsWith(".mp4")) {
     const video = document.createElement("video");
     video.src = src;
@@ -417,7 +441,7 @@ function makeMedia(src, alt) {
     return video;
   }
 
-  return makeImage(src, alt);
+  return makeImage(src, alt, options);
 }
 
 function setNoWidowText(element, text) {
@@ -531,7 +555,10 @@ function renderLightbox() {
     return;
   }
 
-  const element = makeMedia(src, "Project preview");
+  const element = makeMedia(src, "Project preview", {
+    loading: "eager",
+    variant: "large",
+  });
   element.classList.add("media-loaded");
   lightboxStage.append(element);
 }
@@ -634,7 +661,7 @@ function renderProjects(filter = "all") {
 function renderProductIndex() {
   productIndex.innerHTML = "";
 
-  projects.forEach((project) => {
+  projects.forEach((project, index) => {
     const item = document.createElement("button");
     item.className = "index-card";
     item.type = "button";
@@ -644,7 +671,12 @@ function renderProductIndex() {
     const title = document.createElement("h3");
     title.textContent = project.title;
 
-    item.append(makeImage(project.cover, project.title), title);
+    item.append(
+      makeImage(project.cover, project.title, {
+        loading: index < 2 ? "eager" : "lazy",
+      }),
+      title,
+    );
     item.addEventListener("click", () => openProject(project));
     item.addEventListener("mouseenter", () => setProjectFocus(project.title));
     item.addEventListener("mouseleave", clearProjectFocus);

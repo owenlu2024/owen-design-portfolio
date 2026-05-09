@@ -1,1 +1,15 @@
 _reference_frames/
+netlify-publish-fixed/
+*.zip
+
+# Keep original local exports out of the GitHub Pages build.
+assets/**/*.jpg
+!assets/optimized/**/*.jpg
+
+壁挂灭蚊灯/
+户外手持驱蚊灯2/
+户外手持驱蚊灯A/
+户外蜡烛驱蚊灯A/
+户外蜡烛驱蚊灯B/
+火焰喷雾/
+防水复古灭蚊灯/
